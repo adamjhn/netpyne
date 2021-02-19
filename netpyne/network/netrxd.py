@@ -40,10 +40,7 @@ def addRxD(self):
 
 
     """
-
-
     from .. import sim
-
     if len(self.params.rxdParams):
         try:
             global rxd
@@ -352,14 +349,13 @@ def _addReactions(self, params, multicompartment=False):
 
         # regions
         if 'regions' not in param:
-            param['regions'] = None
-            nrnRegions = None
+            param['regions'] = [None]
         elif not isinstance(param['regions'], list):
             param['regions'] = [param['regions']]
-            try:
-                nrnRegions = [self.rxd['regions'][region]['hObj'] for region in param['regions'] if self.rxd['regions'][region]['hObj'] != None]
-            except:
-               print('  Error creating %s %s: could not find regions %s'%(reactionStr, label, param['regions']))
+        try:
+            nrnRegions = [self.rxd['regions'][region]['hObj'] for region in param['regions'] if region is not None and  self.rxd['regions'][region]['hObj'] != None]
+        except:
+           print('  Error creating %s %s: could not find regions %s'%(reactionStr, label, param['regions']))
 
         # membrane
         if 'membrane' not in param:
@@ -420,15 +416,13 @@ def _addRates(self, params):
 
         # regions
         if 'regions' not in param:
-            param['regions'] = None
-            nrnRegions = None
+            param['regions'] = [None]
         elif not isinstance(param['regions'], list):
             param['regions'] = [param['regions']]
-            try:
-                nrnRegions = [self.rxd['regions'][region]['hObj'] for region in param['regions']]
-            except:
-               print('  Error creating Rate %s: could not find regions %s'%(label, param['regions']))
-
+        try:
+             nrnRegions = [self.rxd['regions'][region]['hObj'] for region in param['regions'] if region is not None and self.rxd['regions'][region]['hObj'] != None]
+        except:
+           print('  Error creating Rate %s: could not find regions %s'%(label, param['regions']))
         # membrane_flux
         if 'membrane_flux' not in param:
             param['membrane_flux'] = False
